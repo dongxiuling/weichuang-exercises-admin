@@ -30,7 +30,7 @@
       </el-table-column>
       <el-table-column class-name="status-col" label="编辑" width="220" align="center">
         <template slot-scope="scope">
-          <el-button><svg-icon icon-class="edit" style="color:#001528"/>删除</el-button>
+          <el-button>删除</el-button>
           <el-button>修改</el-button>
         </template>
       </el-table-column>
