@@ -30,8 +30,8 @@
       </el-table-column>
       <el-table-column class-name="status-col" label="编辑" width="220" align="center">
         <template slot-scope="scope">
-          <el-button>删除</el-button>
-          <el-button>修改</el-button>
+          <el-button type="primary">修改</el-button>
+          <el-button type="danger" @click="opendelete">删除</el-button>
         </template>
       </el-table-column>
       <el-table-column align="center" prop="created_at" label="录入时间" width="200">
@@ -41,6 +41,14 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <el-pagination
+      style="margin:20px auto"
+      background
+      layout="prev, pager, next, jumper"
+      :page-size="20"
+      :total="1000">
+    </el-pagination>
   </div>
 </template>
 
@@ -48,16 +56,7 @@
 import { getList } from '@/api/table'
 
 export default {
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    }
-  },
+  
   data() {
     return {
       list: null,
@@ -74,7 +73,24 @@ export default {
         this.list = response.data.items
         this.listLoading = false
       })
-    }
+    },
+     opendelete() {
+        this.$confirm('是否删除当前题目?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+      }
   }
 }
 </script>
