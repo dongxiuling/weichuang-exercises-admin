@@ -91,6 +91,19 @@ export const constantRoutes = [
   },
 
   {
+    path: '/chapter',
+    component: Layout,
+    children: [
+      {
+        path: 'chapterList',
+        name: 'chapterList',
+        component: () => import('@/views/chapter/chapterList'),
+        meta: { title: '章节习题', icon: 'form' }
+      }
+    ]
+  },
+
+  {
     path: '/nested',
     component: Layout,
     redirect: '/nested/menu1',
