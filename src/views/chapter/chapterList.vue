@@ -1,8 +1,8 @@
 <template>
     <div >
-        <el-row>
+        <router-link to = "/editor/editorList">
             <el-button class ="add" round icon="el-icon-plus"></el-button>
-        </el-row>
+        </router-link>
 
         <el-table
     :data="tableData"
@@ -57,11 +57,14 @@ export default {
     },
     methods: {
       handleEdit(index, row) {
-        console.log(index, row);
+        
       },
       handleDelete(index, row) {
-        console.log(index, row);
-        this.tableData.splice(index,1);
+        
+        this.tableData.splice(index,1)
+         
+
+        
       }
     }
 

@@ -43,6 +43,8 @@ export const constantRoutes = [
     hidden: true
   },
 
+  
+
   {
     path: '/',
     component: Layout,
@@ -90,6 +92,26 @@ export const constantRoutes = [
       }
     ]
   },
+
+  {
+    path: '/editor',
+    component: Layout,
+    children: [
+      {
+      path: 'editorList',
+      name: 'editorList',
+      component: () => import('@/views/editor/editorList'),
+    },
+    {
+      path: 'question',
+      name: 'question',
+      component: () => import('@/views/editor/question'),
+    },
+   
+  ]
+  },
+
+ 
 
   {
     path: '/nested',
