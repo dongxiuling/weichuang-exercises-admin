@@ -13,27 +13,28 @@
           {{ scope.$index }}
         </template>
       </el-table-column>
-      <el-table-column label="Title">
+      <el-table-column label="题目">
         <template slot-scope="scope">
           {{ scope.row.title }}
         </template>
       </el-table-column>
-      <el-table-column label="Author" width="110" align="center">
+      <el-table-column label="作者" width="110" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.author }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Pageviews" width="110" align="center">
+      <el-table-column label="阅读数" width="110" align="center">
         <template slot-scope="scope">
           {{ scope.row.pageviews }}
         </template>
       </el-table-column>
-      <el-table-column class-name="status-col" label="Status" width="110" align="center">
+      <el-table-column class-name="status-col" label="编辑" width="220" align="center">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
+          <el-button>删除</el-button>
+          <el-button>修改</el-button>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="created_at" label="Display_time" width="200">
+      <el-table-column align="center" prop="created_at" label="录入时间" width="200">
         <template slot-scope="scope">
           <i class="el-icon-time" />
           <span>{{ scope.row.display_time }}</span>
