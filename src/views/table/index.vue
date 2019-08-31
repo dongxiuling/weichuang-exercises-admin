@@ -206,7 +206,8 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.tableData.splice(index,1);
+          this.total--;
+          this.tableData.splice(row.index,1);
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -240,9 +241,10 @@ export default {
         if (valid) {
             this.tableData.unshift(this.temp)
             this.dialogFormVisible = false
+            this.total++;
             this.$notify({
-              title: 'Success',
-              message: 'Created Successfully',
+              title: '成功',
+              message: '添加成功',
               type: 'success',
               duration: 2000
             })
@@ -262,13 +264,13 @@ export default {
                 break
               }
             }
-            this.dialogFormVisible = false
-            this.$notify({
+          this.dialogFormVisible = false
+          this.$notify({
               title: '成功',
               message: '修改成功',
               type: 'success',
               duration: 2000
-            })
+          })
         }
       })
     }

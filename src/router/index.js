@@ -112,7 +112,7 @@ export const constantRoutes = [
  
 
   {
-    path: '/nested',
+    path: '/table',
     component: Layout,
     hidden: true,
     children: [
