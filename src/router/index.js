@@ -56,23 +56,21 @@ export const constantRoutes = [
   },
 
   {
-    path: '/example',
+    path: '/sort',
     component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: '分类习题', icon: 'dashboard' },
+    meta: { title: '分类习题', icon: 'form' },
     children: [
       {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: '全栈', icon: 'dashboard' }
+        path: 'fullStack',
+        name: 'FullStack',
+        component: () => import('@/views/sort/sort'),
+        meta: { title: '全栈', icon: 'form' }
       },
       {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '后端', icon: 'dashboard' }
+        path: 'backEnd',
+        name: 'BackEnd',
+        component: () => import('@/views/table/index'),
+        meta: { title: '后端', icon: 'form' }
       }
     ]
   },
@@ -92,23 +90,17 @@ export const constantRoutes = [
   },
 
   {
-    path: '/nested',
+    path: '/table',
     component: Layout,
-    redirect: '/nested/menu2',
-    name: 'Nested',
-    // meta: {
-    //   title: '章节习题',
-    //   icon: 'nested'
-    // },
-     children: [
+    hidden: true,
+    children: [
       {
-        path: 'menu2',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '章节习题',icon: 'dashboard' }
+        path: 'table',
+        name: 'table',
+        component: () => import('@/views/table/index')
       }
-     ]
-   },
-
+    ]
+  },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
