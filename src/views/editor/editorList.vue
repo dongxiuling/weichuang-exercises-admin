@@ -2,17 +2,18 @@
     <div class="app-container">
         <el-input v-model="input" placeholder="请输入章节名" style="width:50%;margin-left:30% "></el-input>
         <div>
-        <span style="font-size:22px">单选题</span>
+        <!-- 列表 -->
+        <span>
+        <el-tag style="font-size:15px;margin-left:10px;margin-top:20px">单选题</el-tag>
         
         
  
-<el-button class="filter-item" style="margin-left: 10px;margin-bottom:20px"
- type="primary" icon="el-icon-edit" @click="handleCreate">
-        添加
+<el-button class="filter-item" round size="small" style="margin-left:83%;margin-bottom:10px;margin-top:10px"
+  icon="el-icon-plus"  @click="handleCreate">添加
       </el-button>
-
+        </span>
   <el-table
-      :data="tableData"
+      :data="singleList"
       element-loading-text="Loading"
       border
       fit
@@ -129,7 +130,7 @@
 <el-button type="primary" round>确定</el-button>
 
 
-
+<!-- 新增界面 -->
   <el-dialog
     :visible.sync="dialogFormVisible"
     :title="textMap[dialogStatus]"
@@ -145,6 +146,8 @@
      </el-form-item>
      
      <el-form-item label="C"><el-input type="textarea"  :rows="1" v-model="temp.C"></el-input>
+     </el-form-item>
+     <el-form-item label="D"><el-input type="textarea"  :rows="1" v-model="temp.D"></el-input>
      </el-form-item>
      <el-form-item label="答案"><el-input v-model="temp.answer"></el-input>
      </el-form-item>
@@ -162,16 +165,28 @@
     export default {
          data() {
              return {
-      //         singleList: [{
-      //     question: '第一题',
-        
-      //   }, {
-      //     question: '第二题',
-          
-      //   }, {
-      //     question: '第三题',
-          
-      //   }],
+              singleList: [{
+          title: '第一题',
+        A:'1',
+          B:'2',
+          C:'3',
+          D:'4',
+          answer:'A'
+        }, {
+          title: '第二题',
+          A:'1',
+          B:'2',
+          C:'3',
+          D:'4',
+          answer:'A'
+        }, {
+          title: '第三题',
+          A:'1',
+          B:'2',
+         C:'3',
+          D:'4',
+          answer:'A'
+        }],
       //   multipleList: [
       //     {
       //     question: '第一题',
@@ -211,79 +226,44 @@
       //   update: '编辑',
       //   create: '添加'
       // },
+      temp:[],
       input: '',
       dialogFormVisible:false,
-      tableData: [{
-        id:1,
-          title: '请你谈谈Cookie的弊端',
-          diffcutly:1,
-          A:'1',
-          B:'2',
-          C:'3',
-          answer:'A'
+      
+      // temp: [{
+      //   id:undefined,
+      //     title: '',
+      //     diffcutly:1,
+      //     A:'1',
+      //     B:'2',
+      //     C:'3',
+      //     answer:'A'
         
-        }, {
-          id:2,
-          title: 'web storage和cookie的区别',
-          diffcutly:1,
-          A:'1',
-          B:'2',
-          C:'3',
-          answer:'A'
+      //   }, {
+      //      title: 'web storage和cookie的区别',
+      //     diffcutly:1,
+      //     A:'1',
+      //     B:'2',
+      //     C:'3',
+      //     answer:'A'
           
-        }, {
-          id:3,
-           title: 'CSS中 link 和@import 的区别是？',
-          diffcutly:1,
-          A:'1',
-          B:'2',
-          C:'3',
-          answer:'A'
+      //   }, {
+      //      title: 'CSS中 link 和@import 的区别是？',
+      //     diffcutly:1,
+      //     A:'1',
+      //     B:'2',
+      //     C:'3',
+      //     answer:'A'
           
-        }, {
-          id:4,
-           title: '介绍一下CSS的盒子模型？',
-          diffcutly:1,
-         A:'1',
-          B:'2',
-          C:'3',
-          answer:'A'
+      //   }, {
+      //      title: '介绍一下CSS的盒子模型？',
+      //     diffcutly:1,
+      //     A:'1',
+      //     B:'2',
+      //     C:'3',
+      //     answer:' A'
           
-      }] ,
-      temp: [{
-        id:undefined,
-          title: '',
-          diffcutly:1,
-          A:'1',
-          B:'2',
-          C:'3',
-          answer:'A'
-        
-        }, {
-           title: 'web storage和cookie的区别',
-          diffcutly:1,
-          A:'1',
-          B:'2',
-          C:'3',
-          answer:'A'
-          
-        }, {
-           title: 'CSS中 link 和@import 的区别是？',
-          diffcutly:1,
-          A:'1',
-          B:'2',
-          C:'3',
-          answer:'A'
-          
-        }, {
-           title: '介绍一下CSS的盒子模型？',
-          diffcutly:1,
-          A:'1',
-          B:'2',
-          C:'3',
-          answer:' A'
-          
-      }],
+      // }],
       dialogStatus: '',
       textMap: {
         update: '编辑',
@@ -299,18 +279,19 @@
 
 
      resetTemp() {
-
+      //  this.temp=[...this.singleList];
        this.temp = {
-        diffcutly: undefined,
         title: '',
         A:'',
         B:'',
         C:'',
+        D:'',
         answer:''
       }
 
     },
      handleCreate() {
+       
          this.resetTemp()
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
@@ -319,6 +300,7 @@
       })
     },
     handleUpdate(row){
+      // this.temp=[...this.singleList];
       this.dialogStatus = 'update'
       this.temp = Object.assign({}, row)
       this.dialogFormVisible = true;
@@ -327,9 +309,10 @@
       })
     },
     createData(){
+      // this.temp=[...this.singleList];
        this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-            this.tableData.unshift(this.temp)
+            this.singleList.unshift(this.temp)
             this.dialogFormVisible = false
             this.total++;
             this.$notify({
@@ -343,14 +326,15 @@
       })
     },
     updateData(){
+      // this.temp=[...this.singleList];
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
           
-            for (const v of this.tableData) {
+            for (const v of this.singleList) {
               if (v.index === this.temp.index) {
-                const index = this.tableData.indexOf(v)
-                this.tableData.splice(index, 1, this.temp)
+                const index = this.singleList.indexOf(v)
+                this.singleList.splice(index, 1, this.temp)
                 break
               }
             }
