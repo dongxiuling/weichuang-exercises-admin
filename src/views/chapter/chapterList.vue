@@ -1,5 +1,5 @@
 <template>
-    <div >
+    <div class="app-container">
         <router-link to = "/editor/editorList">
             <el-button class ="add" round icon="el-icon-plus"></el-button>
         </router-link>
@@ -61,7 +61,24 @@ export default {
       },
       handleDelete(index, row) {
         
-        this.tableData.splice(index,1)
+         this.$confirm('是否删除该项?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.total--;
+          this.tableData.splice(row.index,1);
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+            
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
          
 
         
