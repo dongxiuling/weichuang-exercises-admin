@@ -103,11 +103,7 @@ export const constantRoutes = [
       name: 'editorList',
       component: () => import('@/views/editor/editorList'),
     },
-    {
-      path: 'question',
-      name: 'question',
-      component: () => import('@/views/editor/question'),
-    },
+    
    
   ]
   },
