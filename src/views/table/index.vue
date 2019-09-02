@@ -27,9 +27,9 @@
         </template>
       </el-table-column>
       <el-table-column class-name="status-col" label="编辑" width="220" align="center">
-        <template slot-scope="{row}">
-          <el-button type="primary"  @click="handleUpdate(row)">修改</el-button>
-          <el-button type="danger" @click="opendelete(row)">删除</el-button>
+        <template slot-scope="scope">
+          <el-button type="primary"  @click="handleUpdate(scope.$index,scope.row)">修改</el-button>
+          <el-button type="danger" @click="opendelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -166,6 +166,7 @@ export default {
         update: '编辑',
         create: '添加'
       },
+      inx:undefined
     }
     
   },
@@ -228,10 +229,11 @@ export default {
         this.$refs['dataForm'].clearValidate()
       })
     },
-    handleUpdate(row){
+    handleUpdate(index,row){
       this.dialogStatus = 'update'
       this.temp = Object.assign({}, row)
       this.dialogFormVisible = true;
+      this.inx=index;
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
       })
@@ -255,16 +257,14 @@ export default {
     updateData(){
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          const tempData = Object.assign({}, this.temp)
-          
+          const tempData = Object.assign({}, this.temp);
             for (const v of this.tableData) {
               if (v.index === this.temp.index) {
-                const index = this.tableData.indexOf(v)
-                this.tableData.splice(index, 1, this.temp)
-                break
+                this.tableData.splice(this.inx,1,this.temp);
+                break;
               }
             }
-          this.dialogFormVisible = false
+          this.dialogFormVisible = false;
           this.$notify({
               title: '成功',
               message: '修改成功',

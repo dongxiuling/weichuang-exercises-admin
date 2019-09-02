@@ -60,18 +60,21 @@ export const constantRoutes = [
   {
     path: '/sort',
     component: Layout,
+    
     meta: { title: '分类习题', icon: 'form' },
     children: [
       {
         path: 'fullStack',
         name: 'FullStack',
         component: () => import('@/views/sort/sort'),
-        meta: { title: '全栈', icon: 'form' }
+        meta: { title: '全栈', icon: 'form' },
+        
+        
       },
       {
         path: 'backEnd',
         name: 'BackEnd',
-        component: () => import('@/views/table/index'),
+        component: () => import('@/views/sort/sort'),
         meta: { title: '后端', icon: 'form' }
       }
     ]
@@ -114,7 +117,7 @@ export const constantRoutes = [
   {
     path: '/table',
     component: Layout,
-    hidden: true,
+    // hidden: true,
     children: [
       {
         path: 'table',
