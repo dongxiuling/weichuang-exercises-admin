@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-  <span style="font-size:22px">JavaScript</span>
+  <span style="font-size:22px">{{name}}</span>
   <el-button class="filter-item" style="margin-left: 10px;margin-bottom:20px" type="primary" icon="el-icon-edit" @click="handleCreate">
         添加
       </el-button>
@@ -166,7 +166,8 @@ export default {
         update: '编辑',
         create: '添加'
       },
-      inx:undefined
+      inx:undefined,
+      name:this.$route.params.paicheNo
     }
     
   },

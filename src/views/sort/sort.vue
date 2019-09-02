@@ -12,7 +12,7 @@
       label="类别"
       style="width: 90%"  class="chapter" align="center" @click="open()">
       <template slot-scope="scope">
-        <span style="margin-left: 10px" @click="showTable(scope.row)">{{ scope.row.Name }}</span>
+        <span style="margin-left: 10px" @click="showTable(scope.$index,scope.row)">{{ scope.row.Name }}</span>
       </template>
     </el-table-column>
     
@@ -133,8 +133,10 @@ export default {
       handleDelete(index, row) {
         this.tableData.splice(index,1);
       },
-      showTable(row){
-        this.$router.push({ name: 'table'});
+      showTable(index,row){
+        console.log(this.tableData[index].Name);
+        var name = this.tableData[index].Name;
+        this.$router.push({ name: 'table', params: {paicheNo: name}});
       }
     }
 
