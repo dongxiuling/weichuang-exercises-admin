@@ -15,6 +15,8 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 
+import axios from 'axios'
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -32,7 +34,7 @@ if (process.env.NODE_ENV === 'production') {
 Vue.use(ElementUI, { locale })
 
 Vue.config.productionTip = false
-
+Vue.prototype.$http= axios
 new Vue({
   el: '#app',
   router,

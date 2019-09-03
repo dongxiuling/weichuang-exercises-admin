@@ -4,15 +4,15 @@
             <el-button class ="add" round icon="el-icon-plus" @click="createSort()"></el-button>
         </el-row>
 
-        <el-table
-    :data="tableData1"
-    stripe
-    >
+     <el-table
+      :data="list"
+      stripe
+     >
     <el-table-column
       label="类别"
       style="width: 90%"  class="chapter" align="center" @click="open()">
       <template slot-scope="scope">
-        <span style="margin-left: 10px" @click="showTable(scope.$index,scope.row)">{{ scope.row.Name }}</span>
+        <span style="margin-left: 10px" @click="showTable(scope.$index,scope.row)">{{ scope.row.partsname }}</span>
       </template>
     </el-table-column>
     
@@ -47,25 +47,29 @@
 
 
 <script>
+import {getList} from '@/api/list'
 export default {
     data() {
       return {
-        tableData1: [{
-          Name: 'javascript',
+        list:null,
+        listQuery: {
+        Name:''},
+        // tableData1: [{
+        //   Name: 'javascript',
         
-        }, {
-          Name: 'nodejs',
+        // }, {
+        //   Name: 'nodejs',
           
-        }, {
-          Name: 'es6',
+        // }, {
+        //   Name: 'es6',
           
-        }, {
-          Name: 'vue',
+        // }, {
+        //   Name: 'vue',
           
-        },
-        {
-          Name:'react'
-        }],
+        // },
+        // {
+        //   Name:'react'
+        // }],
         temp:{
           Name:''
         },
@@ -75,15 +79,35 @@ export default {
         create: '添加'
       },
       dialogStatus:'',
-      inx:undefined
+      inx:undefined,
+      list: null,
+      listLoading: true
       }
     },
+    created(){
+      this.fetchData();
+    },   
     methods: {
+      fetchData(){
+          getList({
+            bigpartname:"web全栈"
+          }).then(response => {
+            console.log(response.data)
+            this.list = response.data;
+          });
+          //  console.log(this.list) ;
+      },
       resetTemp() {
-      this.temp = {
+        this.temp = {
         Name:''
-      }
-    },
+        }
+      },
+      showTable(index,row){
+        console.log(this.list[index].partsname);
+        var name = this.list[index].partsname;
+        var id = this.list[index].partsid;
+        this.$router.push({ name: 'table', params: {paicheNo: name,partsId:id}});
+      },
       addSort(){
        this.$refs['dataForm'].validate((valid) => {
         if (valid) {
@@ -136,14 +160,7 @@ export default {
       handleDelete(index, row) {
         this.tableData1.splice(index,1);
       },
-      showTable(index,row){
-        console.log(this.tableData1[index].Name);
-        var name = this.tableData1[index].Name;
-        this.$router.push({ name: 'table', params: {paicheNo: name}});
-      }
-    }
-
-    
+    } 
 }
 </script>
 
