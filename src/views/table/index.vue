@@ -17,7 +17,7 @@
     
       <el-table-column align="center" label="ID" width="95" type="index">
         <template slot-scope="scope">
-          <span>{{ scope.row.sc_id }}</span>
+          <span>{{ scope.$index+1 }}</span>
         </template>
       </el-table-column>
       <el-table-column label="题目" prop="title">
@@ -42,7 +42,7 @@
     >
       <el-table-column align="center" label="ID" width="95" type="index">
         <template slot-scope="scope">
-          <span>{{ scope.row.mc_id }}</span>
+          <span>{{ scope.$index+1 }}</span>
         </template>
       </el-table-column>
       <el-table-column label="题目" prop="title">
@@ -107,6 +107,7 @@ export default {
       listSingle:null,
       //多选题数据
       listMultiple:null,
+      list:null,
       temp: {
           id:undefined,
           title: '',
@@ -143,6 +144,7 @@ export default {
     fetchData(){
       //获取单选题列表
       getSingleParts({partsid:this.id}).then(response => {
+        console.log(this.id);
         this.listSingle = response.data;
         console.log(response.data);
 
@@ -150,7 +152,6 @@ export default {
       //获取多选题列表
       getMultipleParts({partsid:this.id}).then(response => {
         this.listMultiple = response.data;
-        // JSON.parse(JSON.stringify(arr)) 
         // console.log(listMultiple);
         // console.log(response.data);
       })
@@ -272,9 +273,8 @@ export default {
     },
     //单选题添加题目
     createData(){
-      
-      // resetTemplist();
       let idSingle=this.id;
+      console.log(idSingle);
        this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.listSingle.push(this.temp);
@@ -283,9 +283,13 @@ export default {
             choice_a:this.temp.choice_a,choice_b:this.temp.choice_b,
             choice_c:this.temp.choice_c, choice_d:this.temp.choice_d,answer:this.temp.answer
           }).then(response => {
-            // console.log(response.data);
+            // this.list = response.data;
+            console.log(response.data);
+             
+            console.log(this.listSingle);
+
           });
-          
+            // this.listSingle.push(this.list);
             this.dialogFormVisible = false;
             this.total++;
             this.$notify({
@@ -322,17 +326,19 @@ export default {
     //多选题添加题目
     createMultipleData(){
       let idSingle=this.id;
-
         this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.listMultiple.push(this.temp);
           addMultipleParts({
-            sc_id:idSingle, title:this.temp.title, 
+            partsdoubleid:idSingle, title:this.temp.title, 
             choice_a:this.temp.choice_a,choice_b:this.temp.choice_b,
             choice_c:this.temp.choice_c, choice_d:this.temp.choice_d,answer:this.temp.answer
           }).then(response => {
+            var Id = response.data;
             console.log(response.data);
+            console.log(Id);
           });
+            // this.listMultiple.push(this.temp);
             this.dialogFormVisible = false;
             this.$notify({
               title: '成功',

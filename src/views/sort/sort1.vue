@@ -66,6 +66,7 @@ export default {
         console.log(this.tableData1[index].Name);
         var name = this.list[index].partsname;
         var id = this.list[index].partsid;
+        // console.log(id);
         this.$router.push({ name: 'table', params: {paicheNo: name,partsId:id}});
       }
     }
