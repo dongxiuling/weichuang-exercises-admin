@@ -5,14 +5,14 @@
         </el-row>
 
         <el-table
-    :data="tableData1"
+    :data="list"
     stripe
     >
     <el-table-column
       label="类别"
       style="width: 90%"  class="chapter" align="center" @click="open()">
       <template slot-scope="scope">
-        <span style="margin-left: 10px" @click="showTable(scope.$index,scope.row)">{{ scope.row.Name }}</span>
+        <span style="margin-left: 10px" @click="showTable(scope.$index,scope.row)">{{ scope.row.partsname }}</span>
       </template>
     </el-table-column>
     
@@ -47,9 +47,11 @@
 
 
 <script>
+import {getList} from '@/api/list'
 export default {
     data() {
       return {
+        list:null,
         tableData1: [{
           Name: 'java',
         
@@ -66,7 +68,19 @@ export default {
       inx:undefined
       }
     },
+    created(){
+      this.fetchData();
+    },
     methods: {
+      fetchData(){
+          getList({
+            bigpartname:"后端编程"
+          }).then(response => {
+            console.log(response.data)
+            this.list = response.data;
+          });
+          //  console.log(this.list) ;
+      },
       resetTemp() {
       this.temp = {
         Name:''
@@ -126,8 +140,9 @@ export default {
       },
       showTable(index,row){
         console.log(this.tableData1[index].Name);
-        var name = this.tableData1[index].Name;
-        this.$router.push({ name: 'table', params: {paicheNo: name}});
+        var name = this.list[index].partsname;
+        var id = this.list[index].partsid;
+        this.$router.push({ name: 'table', params: {paicheNo: name,partsId:id}});
       }
     }
 

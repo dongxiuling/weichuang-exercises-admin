@@ -52,24 +52,7 @@ export default {
     data() {
       return {
         list:null,
-        listQuery: {
-        Name:''},
-        // tableData1: [{
-        //   Name: 'javascript',
         
-        // }, {
-        //   Name: 'nodejs',
-          
-        // }, {
-        //   Name: 'es6',
-          
-        // }, {
-        //   Name: 'vue',
-          
-        // },
-        // {
-        //   Name:'react'
-        // }],
         temp:{
           Name:''
         },
