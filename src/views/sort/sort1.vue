@@ -51,20 +51,8 @@ export default {
     data() {
       return {
         tableData1: [{
-          Name: 'javascript',
+          Name: 'java',
         
-        }, {
-          Name: 'nodejs',
-          
-        }, {
-          Name: 'es6',
-          
-        }, {
-          Name: 'vue',
-          
-        },
-        {
-          Name:'react'
         }],
         temp:{
           Name:''

@@ -74,7 +74,7 @@ export const constantRoutes = [
       {
         path: 'backEnd',
         name: 'BackEnd',
-        component: () => import('@/views/sort/sort'),
+        component: () => import('@/views/sort/sort1'),
         meta: { title: '后端', icon: 'form' }
       }
     ]
