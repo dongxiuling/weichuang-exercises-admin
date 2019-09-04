@@ -1,120 +1,104 @@
 <template>
   <div class="app-container">
-    <router-link to="/editor/editorList">
-      <el-button class="add" round icon="el-icon-plus" style="width:100%">添加</el-button>
-    </router-link>
+    <!-- 添加套题 -->
 
-    <el-table :data="tableData" stripe>
+    <el-button class="add" round icon="el-icon-plus" style="width:100%" @click="createSort()">添加</el-button>
+
+    <!-- 套题总页面 -->
+    <el-table :data="list" stripe>
       <el-table-column label="章节" style="width: 90%" class="chapter" align="center">
         <template slot-scope="scope">
           <i class="el-icon-document"></i>
-          <span style="margin-left: 10px">{{ scope.row.chapterName }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center">
-        <template slot-scope="scope">
-          <router-link to="/editor/editorList">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          </router-link>
-          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          <span
+            style="margin-left: 10px"
+            @click="showExercise(scope.$index,scope.row)"
+          >{{ scope.row.title }}</span>
         </template>
       </el-table-column>
     </el-table>
-
-    <el-pagination
-      layout="prev, pager, next"
-      @current-change="handleCurrentChange"
-      :page-size="10"
-      :total="total"
-      style="float:right;"
-    ></el-pagination>
+    <!-- 添加套题 -->
+    <el-dialog :visible.sync="addsortFromVisible" title="创建" :close-on-click-modal="false">
+      <el-form
+        ref="addsortFrom"
+        :model="addsortFrom"
+        label-position="left"
+        label-width="20%"
+        style="width: 80%; margin-left:50px;"
+      >
+        <el-form-item label="题目" prop="title">
+          <el-input v-model="addsortFrom.title" />
+        </el-form-item>
+        <el-form-item label="内容" prop="content">
+          <el-input v-model="addsortFrom.content" />
+        </el-form-item>
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addsort">确 定</el-button>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 
 <script>
+import { getchapterList, insertchapterList } from "@/api/chapter";
 export default {
   data() {
     return {
-      tableData: [
-        {
-          chapterName: "第一章"
-        },
-        {
-          chapterName: "第二章"
-        },
-        {
-          chapterName: "第三章"
-        },
-        {
-          chapterName: "第四章"
-        }
-      ],
-      total: 0,
-
-      page: 1
+      list: null,
+      addsortFromVisible: false,
+      // 新增套题列表
+      addsortFrom: {
+        title: "",
+        cotent: ""
+      }
     };
   },
+  created() {
+    this.getData();
+  },
   methods: {
-    handleEdit(index, row) {},
-    // 删除
-    handleDelete(index, row) {
-      this.$confirm("是否删除该项?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          this.total--;
-          this.tableData.splice(row.index, 1);
-          this.$message({
-            type: "success",
-            message: "删除成功!"
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
+    createSort() {
+      this.addsortFromVisible = true;
+      this.addsortFrom = {
+        title: "",
+        content: ""
+      };
     },
+    addsort: function() {
+      this.$refs.addsortFrom.validate(valid => {
+        if (valid) {
+          this.$confirm("确认提交吗？", "提示", {}).then(() => {
+            let para = Object.assign({}, this.addsortFrom);
 
-    //页码编辑
-    handleCurrentChange(val) {
-      this.page = val;
-      this.getUsers();
+            insertchapterList(para).then(res => {
+              this.$message({
+                message: "添加成功！",
+                type: "success"
+              });
+              this.$refs["addsortFrom"].resetFields();
+
+              this.addsortFromVisible = false;
+              this.getData();
+            });
+          });
+        }
+      });
     },
-
-    // 获取列表
-    
-			getUsers() {
-
-				let para = {
-
-					page: this.page,
-
-					// name: this.filters.name
-
-				};
-
-				this.listLoading = true;
-
-				//NProgress.start();
-
-				getUserListPage(para).then((res) => {
-
-					this.total = res.data.total;
-
-					this.users = res.data.users;
-
-					this.listLoading = false;
-
-					//NProgress.done();
-
-				});
-
-			},
+    showExercise(index, row) {
+      var title = row.title; 
+      var exer_id = row.exer_id; 
+      // console.log(title, exer_id);
+      this.$router.push({
+        name: "editorList",
+        params: { editorTitle: title, editorId: exer_id }
+      });
+    },
+    getData() {
+      getchapterList({}).then(res => {
+       
+        this.list = res.alldata;
+      });
+    }
   }
 };
 </script>

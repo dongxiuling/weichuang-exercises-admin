@@ -1,20 +1,20 @@
 <template>
   <div class="app-container">
-    <div ref="addChapter" :v-model="addChapter">
-      <el-input v-model="input" placeholder="请输入章节名" style="width:50%;margin-left:30% "></el-input>
+    <div>
+      <span style="font-size:22px">{{title}}</span>
 
       <!-- 列表 -->
       <!-- 单选题 -->
       <div>
-        <span>
-          <el-tag style="font-size:15px;margin-left:10px;margin-top:20px">单选题</el-tag>
+        <span style="position:relative">
+          <el-tag style="font-size:15px;position:absolute;margin-top:10px;margin-left:10px">单选题</el-tag>
           <el-button
             class="filter-item"
             round
             size="small"
-            style="margin-left:83%;margin-bottom:10px;margin-top:10px"
+            style="margin-left:87%;margin-bottom:10px;margin-top:10px"
             icon="el-icon-plus"
-            @click="handleAdd"
+            @click="handleAddSingle"
           >添加</el-button>
         </span>
         <el-table
@@ -26,13 +26,13 @@
         >
           <el-table-column label="题目" align="center" prop="title">
             <template slot-scope="{row}">
-              <span>{{ row.title }}</span>
+              <span>{{row.title }}</span>
             </template>
           </el-table-column>
           <el-table-column class-name="status-col" label="编辑" width="220" align="center">
-            <template slot-scope="{row}">
-              <el-button type="primary" @click="handleEdit">修改</el-button>
-              <el-button type="danger" @click="handleDel(row)">删除</el-button>
+            <template slot-scope="scope">
+              <el-button type="primary" @click="handleEditSingle(scope.$index, scope.row)">修改</el-button>
+              <el-button type="danger" @click="handleDelSingle(scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -41,14 +41,14 @@
       <!-- 多选题 -->
       <div>
         <span>
-          <el-tag style="font-size:15px;margin-left:10px;margin-top:20px">多选题</el-tag>
+          <el-tag style="font-size:15px;position:absolute;margin-top:10px;margin-left:10px">多选题</el-tag>
           <el-button
             class="filter-item"
             round
             size="small"
-            style="margin-left:83%;margin-bottom:10px;margin-top:10px"
+            style="margin-left:87%;margin-bottom:10px;margin-top:10px"
             icon="el-icon-plus"
-            @click="handleAdd"
+            @click="handleAddMultiple"
           >添加</el-button>
         </span>
         <el-table
@@ -64,93 +64,20 @@
             </template>
           </el-table-column>
           <el-table-column class-name="status-col" label="编辑" width="220" align="center">
-            <template slot-scope="{row}">
-              <el-button type="primary" @click="handleEdit">修改</el-button>
-              <el-button type="danger" @click="handleDel(row)">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-
-      <!-- 简答题 -->
-      <div>
-        <span>
-          <el-tag style="font-size:15px;margin-left:10px;margin-top:20px">简答题</el-tag>
-          <el-button
-            class="filter-item"
-            round
-            size="small"
-            style="margin-left:83%;margin-bottom:10px;margin-top:10px"
-            icon="el-icon-plus"
-            @click="handleAdd"
-          >添加</el-button>
-        </span>
-        <el-table
-          :data="multipleList"
-          element-loading-text="Loading"
-          border
-          fit
-          highlight-current-row
-        >
-          <el-table-column label="题目" align="center" prop="title">
-            <template slot-scope="{row}">
-              <span>{{ row.title }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column class-name="status-col" label="编辑" width="220" align="center">
-            <template slot-scope="{row}">
-              <el-button type="primary" @click="handleEdit">修改</el-button>
-              <el-button type="danger" @click="handleDel(row)">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-
-      <!-- 编程题 -->
-      <div>
-        <span>
-          <el-tag style="font-size:15px;margin-left:10px;margin-top:20px">编程题</el-tag>
-          <el-button
-            class="filter-item"
-            round
-            size="small"
-            style="margin-left:83%;margin-bottom:10px;margin-top:10px"
-            icon="el-icon-plus"
-            @click="handleAdd"
-          >添加</el-button>
-        </span>
-        <el-table
-          :data="multipleList"
-          element-loading-text="Loading"
-          border
-          fit
-          highlight-current-row
-        >
-          <el-table-column label="题目" align="center" prop="title">
-            <template slot-scope="{row}">
-              <span>{{ row.title }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column class-name="status-col" label="编辑" width="220" align="center">
-            <template slot-scope="{row}">
-              <el-button type="primary" @click="handleEdit">修改</el-button>
-              <el-button type="danger" @click="handleDel(row)">删除</el-button>
+            <template slot-scope="scope">
+              <el-button type="primary" @click="handleEditMultiple(scope.$index, scope.row)">修改</el-button>
+              <el-button type="danger" @click="handleDelMultiple(scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
       </div>
 
       <router-link to="/chapter/chapterList">
-        <el-button
-          type="primary"
-          round
-          @click="handleCreate"
-          style="width:10%;margin-top:20px;margin-left:45%"
-        >确定</el-button>
+        <el-button type="primary" round style="width:10%;margin-top:20px;margin-left:45%">确定</el-button>
       </router-link>
 
-      <!-- 新增界面 -->
-      <el-dialog title="创建" :visible.sync="addFormVisible" :close-on-click-modal="false">
+      <!-- 多选添加 -->
+      <el-dialog title="创建" :visible.sync="addFormMultipleVisible" :close-on-click-modal="false">
         <el-form
           ref="addForm"
           :model="addForm"
@@ -162,18 +89,18 @@
             <el-input type="textarea" :rows="3" v-model="addForm.title" />
           </el-form-item>
           <el-form-item label="A">
-            <el-input type="textarea" :rows="1" v-model="addForm.A"></el-input>
+            <el-input type="textarea" :rows="1" v-model="addForm.choice_a"></el-input>
           </el-form-item>
 
           <el-form-item label="B">
-            <el-input type="textarea" :rows="1" v-model="addForm.B"></el-input>
+            <el-input type="textarea" :rows="1" v-model="addForm.choice_b"></el-input>
           </el-form-item>
 
           <el-form-item label="C">
-            <el-input type="textarea" :rows="1" v-model="addForm.C"></el-input>
+            <el-input type="textarea" :rows="1" v-model="addForm.choice_c"></el-input>
           </el-form-item>
           <el-form-item label="D">
-            <el-input type="textarea" :rows="1" v-model="addForm.D"></el-input>
+            <el-input type="textarea" :rows="1" v-model="addForm.choice_d"></el-input>
           </el-form-item>
           <el-form-item label="答案">
             <el-input v-model="addForm.answer"></el-input>
@@ -181,12 +108,48 @@
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click.native="addFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click.native="addSubmit" :loading="addLoading">提 交</el-button>
+          <el-button type="primary" @click.native="addSubmitMultiple" :loading="addLoading">提 交</el-button>
         </span>
       </el-dialog>
 
-      <!-- 编辑界面 -->
-      <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
+      <!-- 单选添加 -->
+      <el-dialog title="创建" :visible.sync="addFormSingleVisible" :close-on-click-modal="false">
+        <el-form
+          ref="addForm"
+          :model="addForm"
+          label-position="left"
+          label-width="20%"
+          style="width: 80%; margin-left:50px;"
+        >
+          <el-form-item label="题目" prop="title">
+            <el-input type="textarea" :rows="3" v-model="addForm.title" />
+          </el-form-item>
+          <el-form-item label="A">
+            <el-input type="textarea" :rows="1" v-model="addForm.choice_a"></el-input>
+          </el-form-item>
+
+          <el-form-item label="B">
+            <el-input type="textarea" :rows="1" v-model="addForm.choice_b"></el-input>
+          </el-form-item>
+
+          <el-form-item label="C">
+            <el-input type="textarea" :rows="1" v-model="addForm.choice_c"></el-input>
+          </el-form-item>
+          <el-form-item label="D">
+            <el-input type="textarea" :rows="1" v-model="addForm.choice_d"></el-input>
+          </el-form-item>
+          <el-form-item label="答案">
+            <el-input v-model="addForm.answer"></el-input>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click.native="addFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click.native="addSubmitSingle" :loading="addLoading">提 交</el-button>
+        </span>
+      </el-dialog>
+
+      <!-- 多选编辑 -->
+      <el-dialog title="编辑" :visible.sync="editFormMultipleVisible" :close-on-click-modal="false">
         <el-form
           ref="editForm"
           :model="editForm"
@@ -198,26 +161,61 @@
             <el-input type="textarea" :rows="3" v-model="editForm.title" />
           </el-form-item>
           <el-form-item label="A">
-            <el-input type="textarea" :rows="1" v-model="editForm.A"></el-input>
+            <el-input type="textarea" :rows="1" v-model="editForm.choice_a"></el-input>
           </el-form-item>
 
           <el-form-item label="B">
-            <el-input type="textarea" :rows="1" v-model="editForm.B"></el-input>
+            <el-input type="textarea" :rows="1" v-model="editForm.choice_b"></el-input>
           </el-form-item>
 
           <el-form-item label="C">
-            <el-input type="textarea" :rows="1" v-model="editForm.C"></el-input>
+            <el-input type="textarea" :rows="1" v-model="editForm.choice_c"></el-input>
           </el-form-item>
           <el-form-item label="D">
-            <el-input type="textarea" :rows="1" v-model="editForm.D"></el-input>
+            <el-input type="textarea" :rows="1" v-model="editForm.choice_d"></el-input>
           </el-form-item>
           <el-form-item label="答案">
             <el-input v-model="editForm.answer"></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-          <el-button @click.native="editFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提 交</el-button>
+          <el-button @click.native="editFormMultipleVisible = false">取 消</el-button>
+          <el-button type="primary" @click.native="editSubmitMultiple" :loading="editLoading">提 交</el-button>
+        </span>
+      </el-dialog>
+      <!-- 单选编辑 -->
+      <el-dialog title="编辑" :visible.sync="editFormSingleVisible" :close-on-click-modal="false">
+        <el-form
+          ref="editForm"
+          :model="editForm"
+          label-position="left"
+          label-width="20%"
+          style="width: 80%; margin-left:50px;"
+        >
+          <el-form-item label="题目" prop="title">
+            <el-input type="textarea" :rows="3" v-model="editForm.title" />
+          </el-form-item>
+          <el-form-item label="A">
+            <el-input type="textarea" :rows="1" v-model="editForm.choice_a"></el-input>
+          </el-form-item>
+
+          <el-form-item label="B">
+            <el-input type="textarea" :rows="1" v-model="editForm.choice_b"></el-input>
+          </el-form-item>
+
+          <el-form-item label="C">
+            <el-input type="textarea" :rows="1" v-model="editForm.choice_c"></el-input>
+          </el-form-item>
+          <el-form-item label="D">
+            <el-input type="textarea" :rows="1" v-model="editForm.choice_d"></el-input>
+          </el-form-item>
+          <el-form-item label="答案">
+            <el-input v-model="editForm.answer"></el-input>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click.native="editFormSingleVisible = false">取 消</el-button>
+          <el-button type="primary" @click.native="editSubmitSingle" :loading="editLoading">提 交</el-button>
         </span>
       </el-dialog>
     </div>
@@ -225,271 +223,256 @@
 </template>
 
 <script>
+import {
+  getSingleExerciseList,
+  getMultipleExerciseList,
+  updateSingleList,
+  updateMultipleList,
+  insertSingle,
+  insertMultiple,
+  delSingleList,
+  delMultipleList
+} from "@/api/chapter";
 export default {
   data() {
     return {
+      singleList:[],
+      multipleList: [],
       //  新增页面数据
       addForm: {
+        id: undefined,
         title: "",
-        A: "",
-        B: "",
-        C: "",
-        D: "",
-        answer: ""
+        choice_a: "",
+        choice_b: "",
+        choice_c: "",
+        choice_d: "",
+        answer: "",
+        answer_desc: null,
+        exer_id: null,
+        kindID: undefined
       },
       // 新增页面是否显示
-      addFormVisible: false,
+      addFormSingleVisible: false,
+      addFormMultipleVisible: false,
       addLoading: false,
 
       // 编辑页面是否显示
-      editFormVisible: false,
+      editFormSingleVisible: false,
+      editFormMultipleVisible: false,
       editLoading: false,
 
       // 编辑界面数据
       editForm: {
+        id: undefined,
         title: "",
-        A: "",
-        B: "",
-        C: "",
-        D: "",
-        answer: ""
+        choice_a: "",
+        choice_b: "",
+        choice_c: "",
+        choice_d: "",
+        answer: "",
+        answer_desc: null,
+        exer_id: null,
+        kindID: undefined
       },
 
-      singleList: [
-        {
-          title: "第一题",
-          A: "1",
-          B: "2",
-          C: "3",
-          D: "4",
-          answer: "A"
-        },
-        {
-          title: "第二题",
-          A: "1",
-          B: "2",
-          C: "3",
-          D: "4",
-          answer: "A"
-        },
-        {
-          title: "第三题",
-          A: "1",
-          B: "2",
-          C: "3",
-          D: "4",
-          answer: "A"
-        }
-      ],
-      multipleList: [
-        {
-          title: "第一题",
-          A: "1",
-          B: "2",
-          C: "3",
-          D: "4",
-          answer: "A"
-        },
-        {
-          title: "第二题",
-          A: "1",
-          B: "2",
-          C: "3",
-          D: "4",
-          answer: "A"
-        },
-        {
-          title: "第三题",
-          A: "1",
-          B: "2",
-          C: "3",
-          D: "4",
-          answer: "A"
-        }
-      ],
-      input: "",
-
-      //新增章节
-      addChapter: []
+      title: this.$route.params.editorTitle,
+      id: this.$route.params.editorId
     };
   },
+  created() {
+    this.getData();
+    // console.log(this.$route.params.editorId);
+  },
   methods: {
-    // 显示新增页面
-    handleAdd: function() {
-      this.addFormVisible = true;
+    // 获取页面
+    getData() {
+      // 获取单选列表
+      getSingleExerciseList({ exer_id: this.id }).then(res => {
+        this.singleList = res.data;
+        
+      });
+      // 获取多选列表
+      getMultipleExerciseList({ exer_id: this.id }).then(res => {
+        this.multipleList = res.data;
+      });
+    },
+    // 显示单选新增页面
+    handleAddSingle: function() {
+      this.addFormSingleVisible = true;
       this.addForm = {
+        id: undefined,
         title: "",
-        A: "",
-        B: "",
-        C: "",
-        D: "",
-        answer: ""
+        choice_a: "",
+        choice_b: "",
+        choice_c: "",
+        choice_d: "",
+        answer: "",
+        answer_desc: null,
+        exer_id: null,
+        kindID: undefined
       };
     },
-
-    // 新增
-    addSubmit: function() {
+    // 显示多选新增页面
+    handleAddMultiple: function() {
+      this.addFormMultipleVisible = true;
+      this.addForm = {
+        id: undefined,
+        title: "",
+        choice_a: "",
+        choice_b: "",
+        choice_c: "",
+        choice_d: "",
+        answer: "",
+        answer_desc: null,
+        exer_id: null,
+        kindID: undefined
+      };
+    },
+    // 单选新增
+    addSubmitSingle: function() {
       this.$refs.addForm.validate(valid => {
         if (valid) {
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
-            this.addLoading = true;
-
-            //NProgress.start();
-
-            let para = Object.assign({}, this.addForm);
-
-            addUser(para).then(res => {
-              this.addLoading = false;
-
-              //NProgress.done();
-
+            insertSingle({
+              exer_id: this.id,
+              title: this.addForm.title,
+              choice_a: this.addForm.choice_a,
+              choice_b: this.addForm.choice_b,
+              choice_c: this.addForm.choice_c,
+              choice_d: this.addForm.choice_d,
+              answer: this.addForm.answer
+            }).then(res => {
+              this.addFormSingleVisible = false;
               this.$message({
-                message: "提交成功",
-
+                message: "添加成功！",
                 type: "success"
               });
-
-              this.$refs["addForm"].resetFields();
-
-              this.addFormVisible = false;
-
-              // this.getUsers();
+              this.getData();
             });
           });
         }
       });
     },
-
-    // addSubmit: function() {
-    //   this.singleList.push({
-    //     title: this.title
-    //   });
-    // },
-
-    // 显示编辑界面
-    handleEdit: function(index, row) {
-      this.editFormVisible = true;
-
-      this.editForm = Object.assign({}, row);
-    },
-
-    // 编辑
-    editSubmit: function() {
-      this.$refs.editForm.validate(valid => {
+    // 多选新增
+    addSubmitMultiple: function() {
+      this.$refs.addForm.validate(valid => {
         if (valid) {
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
-            this.editLoading = true;
-
-            //NProgress.start();
-
-            let para = Object.assign({}, this.editForm);
-            editUser(para).then(res => {
-              this.editLoading = false;
-
-              //NProgress.done();
-
+            insertMultiple({
+              exer_id: this.id,
+              title: this.addForm.title,
+              choice_a: this.addForm.choice_a,
+              choice_b: this.addForm.choice_b,
+              choice_c: this.addForm.choice_c,
+              choice_d: this.addForm.choice_d,
+              answer: this.addForm.answer
+            }).then(res => {
+              this.addFormMultipleVisible = false;
               this.$message({
-                message: "提交成功",
-
+                message: "添加成功！",
                 type: "success"
               });
-
-              this.$refs["editForm"].resetFields();
-
-              this.editFormVisible = false;
-
-              this.getUsers();
+              this.getData();
             });
           });
         }
       });
     },
 
-    //删除
-    // handleDel: function (index, row) {
-
-    // 				this.$confirm('确认删除该记录吗?', '提示', {
-
-    // 					type: 'warning'
-
-    // 				}).then(() => {
-
-    // this.listLoading = true;
-
-    // // NProgress.start();
-
-    // 		let para = { id: row.id };
-
-    // 		removeUser(para).then((res) => {
-
-    // 			this.listLoading = false;
-
-    // 			//NProgress.done();
-
-    // 			this.$message({
-
-    // 				message: '删除成功',
-
-    // 				type: 'success'
-
-    // 			});
-
-    // 			this.getUsers();
-
-    // 		});
-
-    // 	}).catch(() => {
-
-    // 	});
-
-    // },
-
-    handleDel(row) {
-      this.$confirm("是否删除该项?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+    // 单选删除
+    handleDelSingle: function(row) {
+      this.$confirm("确认删除该记录吗?", "提示", {
         type: "warning"
       })
         .then(() => {
-          // this.total--;
-          this.singleList.splice(row, 1);
-          this.$message({
-            type: "success",
-            message: "删除成功!"
+          delSingleList({ sc_id: row.sc_id }).then(res => {
+            this.$message({
+              message: "删除成功",
+
+              type: "success"
+            });
+            this.getData();
           });
         })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
+        .catch(() => {});
+    },
+    // 多选删除
+    handleDelMultiple: function(row) {
+      console.log(row);
+      this.$confirm("确认删除该记录吗?", "提示", {
+        type: "warning"
+      })
+        .then(() => {
+          delMultipleList({ mc_id: row.mc_id }).then(res => {
+            this.$message({
+              message: "删除成功",
+
+              type: "success"
+            });
+            this.getData();
           });
-        });
+        })
+        .catch(() => {});
     },
 
-    handleCreate: function() {
-      this.$refs.addChapter.validate(valid => {
+    // 显示单选编辑
+    handleEditSingle: function(index, row) {
+      this.editFormSingleVisible = true;
+      this.editForm = Object.assign({}, row);
+    },
+    // 显示多选编辑
+    handleEditMultiple: function(index, row) {
+      this.editFormMultipleVisible = true;
+      this.editForm = Object.assign({}, row);
+    },
+
+    // 单选编辑
+    editSubmitSingle: function() {
+      this.$refs.editForm.validate(valid => {
         if (valid) {
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
-            this.addLoading = true;
-
-            //NProgress.start();
-
-            let para = Object.assign({}, this.addChapter);
-
-            addUser(para).then(res => {
-              this.addLoading = false;
-
-              //NProgress.done();
-
+            updateSingleList({
+              sc_id: this.editForm.sc_id,
+              title: this.editForm.title,
+              choice_a: this.editForm.choice_a,
+              choice_b: this.editForm.choice_b,
+              choice_c: this.editForm.choice_c,
+              choice_d: this.editForm.choice_d,
+              answer: this.editForm.answer
+            }).then(res => {
               this.$message({
                 message: "提交成功",
-
                 type: "success"
               });
-
-              this.$refs["addChapter"].resetFields();
-
-              // this.getUsers();
+              this.$refs["editForm"].resetFields();
+              this.editFormSingleVisible = false;
+              this.getData();
+            });
+          });
+        }
+      });
+    },
+    // 多选编辑
+    editSubmitMultiple: function() {
+      this.$refs.editForm.validate(valid => {
+        if (valid) {
+          this.$confirm("确认提交吗？", "提示", {}).then(() => {
+            updateMultipleList({
+              mc_id: this.editForm.mc_id,
+              title: this.editForm.title,
+              choice_a: this.editForm.choice_a,
+              choice_b: this.editForm.choice_b,
+              choice_c: this.editForm.choice_c,
+              choice_d: this.editForm.choice_d,
+              answer: this.editForm.answer
+            }).then(res => {
+              this.$message({
+                message: "提交成功",
+                type: "success"
+              });
+              this.$refs["editForm"].resetFields();
+              this.editFormMultipleVisible = false;
+              this.getData();
             });
           });
         }
