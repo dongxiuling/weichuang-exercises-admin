@@ -104,9 +104,9 @@ export default {
       //弹出框标识
       dialogFormVisible:false,
       //单选题数据
-      listSingle:null,
+      listSingle:[],
       //多选题数据
-      listMultiple:null,
+      listMultiple:[],
       list:null,
       temp: {
           id:undefined,
@@ -209,7 +209,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.listMultiple.splice(row.index,1);
+          this.listMultiple.splice(index,1);
           deleteMultipleParts({
             mc_id:mc_id
           }).then(response => {
@@ -277,16 +277,15 @@ export default {
       console.log(idSingle);
        this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          this.listSingle.push(this.temp);
+          // this.listSingle.push(this.temp);
           addSingleParts({
             partsdoubleid:idSingle, title:this.temp.title, 
             choice_a:this.temp.choice_a,choice_b:this.temp.choice_b,
             choice_c:this.temp.choice_c, choice_d:this.temp.choice_d,answer:this.temp.answer
           }).then(response => {
-            // this.list = response.data;
-            console.log(response.data);
-             
-            console.log(this.listSingle);
+            // console.log(1,response.data);
+             this.listSingle.push(response.data[0]);
+            // console.log(this.listSingle);
 
           });
             // this.listSingle.push(this.list);
@@ -306,7 +305,6 @@ export default {
       let idSingle=this.listSingle[this.inx].sc_id;
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          const tempData = Object.assign({}, this.temp);
           this.listSingle.splice(this.inx,1,this.temp);
           changeSingleParts({
             sc_id:idSingle, title:this.temp.title, 
@@ -328,15 +326,13 @@ export default {
       let idSingle=this.id;
         this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          this.listMultiple.push(this.temp);
+          // this.listMultiple.push(this.temp);
           addMultipleParts({
             partsdoubleid:idSingle, title:this.temp.title, 
             choice_a:this.temp.choice_a,choice_b:this.temp.choice_b,
             choice_c:this.temp.choice_c, choice_d:this.temp.choice_d,answer:this.temp.answer
           }).then(response => {
-            var Id = response.data;
-            console.log(response.data);
-            console.log(Id);
+            this.listMultiple.push(response.data[0])
           });
             // this.listMultiple.push(this.temp);
             this.dialogFormVisible = false;
@@ -355,12 +351,15 @@ export default {
       let idSingle=this.listMultiple[this.inx].mc_id;
         this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          const tempData = Object.assign({}, this.temp);
           this.listMultiple.splice(this.inx,1,this.temp);
           changeMultipleParts({
             mc_id:idSingle, title:this.temp.title, 
             choice_a:this.temp.choice_a,choice_b:this.temp.choice_b,
             choice_c:this.temp.choice_c, choice_d:this.temp.choice_d,answer:this.temp.answer
+          }).then(response => {
+            // console.log(1,response.data);
+            // console.log(this.listSingle);
+
           });
           this.dialogFormVisible = false;
           this.$notify({
