@@ -23,12 +23,16 @@ const mutations = {
 const actions = {
   // user login
   login({ commit }, userInfo) {
-    const { username, password } = userInfo
+    console.log(userInfo)
+    const { name, pass } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+      login({ name: name, pass: pass, token:getToken() }).then(response => {
+        // const { data } = response.data
+        console.log(response);
+        commit('SET_TOKEN', response.teaInofr.token)
+        commit('SET_NAME', response.teaInofr.name)
+        commit('SET_AVATAR', response.teaInofr.image)
+        setToken(response.teaInofr.token)
         resolve()
       }).catch(error => {
         reject(error)

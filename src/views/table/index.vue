@@ -17,7 +17,7 @@
     
       <el-table-column align="center" label="ID" width="95" type="index">
         <template slot-scope="scope">
-          <span>{{ scope.row.sc_id }}</span>
+          <span>{{ scope.$index+1 }}</span>
         </template>
       </el-table-column>
       <el-table-column label="题目" prop="title">
@@ -42,7 +42,7 @@
     >
       <el-table-column align="center" label="ID" width="95" type="index">
         <template slot-scope="scope">
-          <span>{{ scope.row.mc_id }}</span>
+          <span>{{ scope.$index+1 }}</span>
         </template>
       </el-table-column>
       <el-table-column label="题目" prop="title">
@@ -92,9 +92,17 @@
 </template>
 
 <script>
-import {getSingleParts,getMultipleParts,changeSingleParts,
-changeMultipleParts,addSingleParts,addMultipleParts,
-deleteSingleParts,deleteMultipleParts} from '@/api/list'
+import 
+{
+  getSingleParts,
+  getMultipleParts,
+  changeSingleParts,
+  changeMultipleParts,
+  addSingleParts,
+  addMultipleParts,
+  deleteSingleParts,
+  deleteMultipleParts
+  } from '@/api/list'
 
 
 export default {
@@ -104,9 +112,10 @@ export default {
       //弹出框标识
       dialogFormVisible:false,
       //单选题数据
-      listSingle:null,
+      listSingle:[],
       //多选题数据
-      listMultiple:null,
+      listMultiple:[],
+      list:null,
       temp: {
           id:undefined,
           title: '',
@@ -143,6 +152,7 @@ export default {
     fetchData(){
       //获取单选题列表
       getSingleParts({partsid:this.id}).then(response => {
+        console.log(this.id);
         this.listSingle = response.data;
         console.log(response.data);
 
@@ -150,7 +160,6 @@ export default {
       //获取多选题列表
       getMultipleParts({partsid:this.id}).then(response => {
         this.listMultiple = response.data;
-        // JSON.parse(JSON.stringify(arr)) 
         // console.log(listMultiple);
         // console.log(response.data);
       })
@@ -208,7 +217,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.listMultiple.splice(row.index,1);
+          this.listMultiple.splice(index,1);
           deleteMultipleParts({
             mc_id:mc_id
           }).then(response => {
@@ -272,28 +281,30 @@ export default {
     },
     //单选题添加题目
     createData(){
-      
-      // resetTemplist();
       let idSingle=this.id;
-       this.$refs['dataForm'].validate((valid) => {
+      console.log(idSingle);
+      this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          this.listSingle.push(this.temp);
+          // this.listSingle.push(this.temp);
           addSingleParts({
             partsdoubleid:idSingle, title:this.temp.title, 
             choice_a:this.temp.choice_a,choice_b:this.temp.choice_b,
             choice_c:this.temp.choice_c, choice_d:this.temp.choice_d,answer:this.temp.answer
           }).then(response => {
-            // console.log(response.data);
+            // console.log(1,response.data);
+             this.listSingle.push(response.data[0]);
+            // console.log(this.listSingle);
+
           });
-          
-            this.dialogFormVisible = false;
-            this.total++;
-            this.$notify({
-              title: '成功',
-              message: '添加单选题成功',
-              type: 'success',
-              duration: 2000
-            });
+            // this.listSingle.push(this.list);
+          this.dialogFormVisible = false;
+          this.total++;
+          this.$notify({
+            title: '成功',
+            message: '添加单选题成功',
+            type: 'success',
+            duration: 2000
+          });
         }
       });
     },
@@ -302,7 +313,6 @@ export default {
       let idSingle=this.listSingle[this.inx].sc_id;
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          const tempData = Object.assign({}, this.temp);
           this.listSingle.splice(this.inx,1,this.temp);
           changeSingleParts({
             sc_id:idSingle, title:this.temp.title, 
@@ -322,17 +332,17 @@ export default {
     //多选题添加题目
     createMultipleData(){
       let idSingle=this.id;
-
-        this.$refs['dataForm'].validate((valid) => {
+      this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          this.listMultiple.push(this.temp);
+          // this.listMultiple.push(this.temp);
           addMultipleParts({
-            sc_id:idSingle, title:this.temp.title, 
+            partsdoubleid:idSingle, title:this.temp.title, 
             choice_a:this.temp.choice_a,choice_b:this.temp.choice_b,
             choice_c:this.temp.choice_c, choice_d:this.temp.choice_d,answer:this.temp.answer
           }).then(response => {
-            console.log(response.data);
+            this.listMultiple.push(response.data[0]);
           });
+            // this.listMultiple.push(this.temp);
             this.dialogFormVisible = false;
             this.$notify({
               title: '成功',
@@ -347,14 +357,17 @@ export default {
     updataMultipleData(){
       // console.log(this.listMultiple[this.inx].mc_id);
       let idSingle=this.listMultiple[this.inx].mc_id;
-        this.$refs['dataForm'].validate((valid) => {
+      this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          const tempData = Object.assign({}, this.temp);
           this.listMultiple.splice(this.inx,1,this.temp);
           changeMultipleParts({
             mc_id:idSingle, title:this.temp.title, 
             choice_a:this.temp.choice_a,choice_b:this.temp.choice_b,
             choice_c:this.temp.choice_c, choice_d:this.temp.choice_d,answer:this.temp.answer
+          }).then(response => {
+            // console.log(1,response.data);
+            // console.log(this.listSingle);
+
           });
           this.dialogFormVisible = false;
           this.$notify({
