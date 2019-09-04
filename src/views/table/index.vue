@@ -92,9 +92,17 @@
 </template>
 
 <script>
-import {getSingleParts,getMultipleParts,changeSingleParts,
-changeMultipleParts,addSingleParts,addMultipleParts,
-deleteSingleParts,deleteMultipleParts} from '@/api/list'
+import 
+{
+  getSingleParts,
+  getMultipleParts,
+  changeSingleParts,
+  changeMultipleParts,
+  addSingleParts,
+  addMultipleParts,
+  deleteSingleParts,
+  deleteMultipleParts
+  } from '@/api/list'
 
 
 export default {
@@ -275,7 +283,7 @@ export default {
     createData(){
       let idSingle=this.id;
       console.log(idSingle);
-       this.$refs['dataForm'].validate((valid) => {
+      this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           // this.listSingle.push(this.temp);
           addSingleParts({
@@ -289,14 +297,14 @@ export default {
 
           });
             // this.listSingle.push(this.list);
-            this.dialogFormVisible = false;
-            this.total++;
-            this.$notify({
-              title: '成功',
-              message: '添加单选题成功',
-              type: 'success',
-              duration: 2000
-            });
+          this.dialogFormVisible = false;
+          this.total++;
+          this.$notify({
+            title: '成功',
+            message: '添加单选题成功',
+            type: 'success',
+            duration: 2000
+          });
         }
       });
     },
@@ -324,7 +332,7 @@ export default {
     //多选题添加题目
     createMultipleData(){
       let idSingle=this.id;
-        this.$refs['dataForm'].validate((valid) => {
+      this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           // this.listMultiple.push(this.temp);
           addMultipleParts({
@@ -332,7 +340,7 @@ export default {
             choice_a:this.temp.choice_a,choice_b:this.temp.choice_b,
             choice_c:this.temp.choice_c, choice_d:this.temp.choice_d,answer:this.temp.answer
           }).then(response => {
-            this.listMultiple.push(response.data[0])
+            this.listMultiple.push(response.data[0]);
           });
             // this.listMultiple.push(this.temp);
             this.dialogFormVisible = false;
@@ -349,7 +357,7 @@ export default {
     updataMultipleData(){
       // console.log(this.listMultiple[this.inx].mc_id);
       let idSingle=this.listMultiple[this.inx].mc_id;
-        this.$refs['dataForm'].validate((valid) => {
+      this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.listMultiple.splice(this.inx,1,this.temp);
           changeMultipleParts({

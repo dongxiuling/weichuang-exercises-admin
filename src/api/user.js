@@ -1,8 +1,9 @@
 import request from '@/utils/request'
 
 export function login(data) {
+  // console.log(123);
   return request({
-    url: '/user/login',
+    url: 'http://login.superlanlanlan.cn/teaMangeLogin',
     method: 'post',
     data
   })

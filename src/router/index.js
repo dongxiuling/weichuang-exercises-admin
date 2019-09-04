@@ -108,16 +108,15 @@ export const constantRoutes = [
   ]
   },
 
- 
-
   {
-    path: '/table',
+    path: '/sort/table',
     component: Layout,
-    // hidden: true,
+    hidden: true,
     children: [
       {
         path: 'table',
         name: 'table',
+        meta: { title: '题目列表'},
         component: () => import('@/views/table/index')
       }
     ]
