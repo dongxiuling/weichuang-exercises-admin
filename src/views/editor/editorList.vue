@@ -135,7 +135,7 @@
           <el-form-item label="A">
             <el-input type="textarea" :rows="1" v-model="addForm.choice_a"></el-input>
           </el-form-item>
-
+qqqqqq
           <el-form-item label="B">
             <el-input type="textarea" :rows="1" v-model="addForm.choice_b"></el-input>
           </el-form-item>
