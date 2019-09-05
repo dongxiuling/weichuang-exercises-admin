@@ -102,12 +102,20 @@
           <el-form-item label="D">
             <el-input type="textarea" :rows="1" v-model="addForm.choice_d"></el-input>
           </el-form-item>
-          <el-form-item label="答案">
+          <!-- <el-form-item label="答案">
             <el-input v-model="addForm.answer"></el-input>
+          </el-form-item>-->
+          <el-form-item label="答案">
+            <el-checkbox-group v-model="checkListFrom">
+              <el-checkbox label="A"></el-checkbox>
+              <el-checkbox label="B"></el-checkbox>
+              <el-checkbox label="C"></el-checkbox>
+              <el-checkbox label="D"></el-checkbox>
+            </el-checkbox-group>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-          <el-button @click.native="addFormVisible = false">取 消</el-button>
+          <el-button @click.native="addFormMultipleVisible = false">取 消</el-button>
           <el-button type="primary" @click.native="addSubmitMultiple" :loading="addLoading">提 交</el-button>
         </span>
       </el-dialog>
@@ -139,11 +147,16 @@
             <el-input type="textarea" :rows="1" v-model="addForm.choice_d"></el-input>
           </el-form-item>
           <el-form-item label="答案">
-            <el-input v-model="addForm.answer"></el-input>
+            <el-radio-group v-model="addForm.answer">
+              <el-radio label="A">A</el-radio>
+              <el-radio label="B">B</el-radio>
+              <el-radio label="C">C</el-radio>
+              <el-radio label="D">D</el-radio>
+            </el-radio-group>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-          <el-button @click.native="addFormVisible = false">取 消</el-button>
+          <el-button @click.native="addFormSingleVisible = false">取 消</el-button>
           <el-button type="primary" @click.native="addSubmitSingle" :loading="addLoading">提 交</el-button>
         </span>
       </el-dialog>
@@ -175,7 +188,12 @@
             <el-input type="textarea" :rows="1" v-model="editForm.choice_d"></el-input>
           </el-form-item>
           <el-form-item label="答案">
-            <el-input v-model="editForm.answer"></el-input>
+            <el-checkbox-group v-model="checkListFrom">
+              <el-checkbox label="A"></el-checkbox>
+              <el-checkbox label="B"></el-checkbox>
+              <el-checkbox label="C"></el-checkbox>
+              <el-checkbox label="D"></el-checkbox>
+            </el-checkbox-group>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -210,7 +228,12 @@
             <el-input type="textarea" :rows="1" v-model="editForm.choice_d"></el-input>
           </el-form-item>
           <el-form-item label="答案">
-            <el-input v-model="editForm.answer"></el-input>
+            <el-radio-group v-model="editForm.answer">
+              <el-radio label="A">A</el-radio>
+              <el-radio label="B">B</el-radio>
+              <el-radio label="C">C</el-radio>
+              <el-radio label="D">D</el-radio>
+            </el-radio-group>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -236,7 +259,9 @@ import {
 export default {
   data() {
     return {
-      singleList:[],
+      checkList: [],
+      checkListFrom: [],
+      singleList: [],
       multipleList: [],
       //  新增页面数据
       addForm: {
@@ -289,12 +314,17 @@ export default {
       // 获取单选列表
       getSingleExerciseList({ exer_id: this.id }).then(res => {
         this.singleList = res.data;
-        
       });
       // 获取多选列表
       getMultipleExerciseList({ exer_id: this.id }).then(res => {
         this.multipleList = res.data;
+        for(var n in this.multipleList){
+          this.checkList[n]=this.multipleList[n].answer.split("|");
+        }
       });
+    },
+    resetCheckListFrom() {
+      this.checkListFrom = [];
     },
     // 显示单选新增页面
     handleAddSingle: function() {
@@ -315,6 +345,7 @@ export default {
     // 显示多选新增页面
     handleAddMultiple: function() {
       this.addFormMultipleVisible = true;
+      this.resetCheckListFrom();
       this.addForm = {
         id: undefined,
         title: "",
@@ -355,6 +386,8 @@ export default {
     },
     // 多选新增
     addSubmitMultiple: function() {
+      this.addForm.answer = this.checkListFrom.join("|");
+      
       this.$refs.addForm.validate(valid => {
         if (valid) {
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
@@ -423,6 +456,7 @@ export default {
     // 显示多选编辑
     handleEditMultiple: function(index, row) {
       this.editFormMultipleVisible = true;
+      this.checkListFrom = this.checkList[index];
       this.editForm = Object.assign({}, row);
     },
 
@@ -454,6 +488,7 @@ export default {
     },
     // 多选编辑
     editSubmitMultiple: function() {
+      this.editForm.answer = this.checkListFrom.join("|");
       this.$refs.editForm.validate(valid => {
         if (valid) {
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
