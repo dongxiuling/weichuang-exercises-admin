@@ -59,7 +59,7 @@
     </el-table>
 
     
-
+    <!-- 单选-->
     <el-dialog
     :visible.sync="dialogFormVisible"
     :title="textMap[dialogStatus]"
@@ -80,11 +80,58 @@
      <el-form-item label="D"><el-input type="textarea"  :rows="1" v-model="temp.choice_d"></el-input>
      </el-form-item>
       </el-form-item>
-     <el-form-item label="答案"><el-input v-model="temp.answer"></el-input>
-     </el-form-item>
+    <!--  <el-form-item label="答案"><el-input v-model="temp.answer"></el-input>
+      </el-form-item>-->
+      <el-form-item label="答案"></el-form-item>
+       <el-radio-group  v-model="temp.answer">
+        <el-radio label="A">A</el-radio>
+        <el-radio label="B">B</el-radio>
+        <el-radio label="C">C</el-radio>
+        <el-radio label="D">D</el-radio>
+      </el-radio-group>
+      </el-form-item>
     </el-form>
+
     <span slot="footer" class="dialog-footer">
     <el-button @click="dialogFormVisible = false">取 消</el-button>
+    <el-button type="primary" @click="dialogStatus==='create'?(dialogType===1?createData():createMultipleData()):(dialogType===1?updateData():updataMultipleData())">确 定</el-button>
+  </span>
+    </el-dialog>
+    
+    <!-- 多选-->
+    <el-dialog
+    :visible.sync="dialogFormVisible1"
+    :title="textMap[dialogStatus]"
+    >
+    <el-form ref="dataForm" :model="temp" label-position="left" label-width="20%" style="width: 80%; margin-left:50px;">
+      <el-form-item label="题目" prop="title">
+      <el-input type="textarea"  :rows="3"   v-model="temp.title"/>
+      </el-form-item>
+     <el-form-item label="A"><el-input type="textarea"  :rows="1" v-model="temp.choice_a"></el-input>
+     </el-form-item>
+     </el-form-item>
+     <el-form-item label="B"><el-input type="textarea"  :rows="1" v-model="temp.choice_b"></el-input>
+     </el-form-item>
+     </el-form-item>
+     <el-form-item label="C"><el-input type="textarea"  :rows="1" v-model="temp.choice_c"></el-input>
+     </el-form-item>
+     </el-form-item>
+     <el-form-item label="D"><el-input type="textarea"  :rows="1" v-model="temp.choice_d"></el-input>
+     </el-form-item>
+      </el-form-item>
+    <!--<el-form-item label="答案"><el-input v-model="temp.answer"></el-input>
+    //  </el-form-item>-->
+    <el-form-item label="答案">
+    <el-checkbox-group v-model="checkListTemp">
+    <el-checkbox label=A></el-checkbox>
+    <el-checkbox label=B></el-checkbox>
+    <el-checkbox label=C></el-checkbox>
+    <el-checkbox label=D></el-checkbox>
+  </el-checkbox-group>
+  </el-form-item>
+    </el-form>
+    <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogFormVisible1 = false">取 消</el-button>
     <el-button type="primary" @click="dialogStatus==='create'?(dialogType===1?createData():createMultipleData()):(dialogType===1?updateData():updataMultipleData())">确 定</el-button>
   </span>
     </el-dialog>
@@ -108,9 +155,16 @@ import
 export default {
   data() {
     return {
+      name:this.$route.params.paicheNo,
+      id:this.$route.params.partsId,
        listLoading: true,
-      //弹出框标识
+      //弹出框单选标识
       dialogFormVisible:false,
+      //弹出框多选
+      dialogFormVisible1:false,
+      checkList:[],
+      // checkListtemp:{},
+       checkListTemp:[],
       //单选题数据
       listSingle:[],
       //多选题数据
@@ -140,8 +194,7 @@ export default {
         multiple:2
       },
       inx:undefined,
-      name:this.$route.params.paicheNo,
-      id:this.$route.params.partsId,
+      
     }
     
   },
@@ -152,17 +205,26 @@ export default {
     fetchData(){
       //获取单选题列表
       getSingleParts({partsid:this.id}).then(response => {
-        console.log(this.id);
+        // console.log(this.id);
         this.listSingle = response.data;
-        console.log(response.data);
+        // console.log(response.data);
 
       });
       //获取多选题列表
       getMultipleParts({partsid:this.id}).then(response => {
         this.listMultiple = response.data;
+        for(var n in this.listMultiple){
+          // console.log(this.listMultiple[n].answer);
+          this.checkList[n]=this.listMultiple[n].answer.split("|")
+
+          }
+        // console.log(this.listMultiple[0].answer);
         // console.log(listMultiple);
         // console.log(response.data);
       })
+       },
+       resetChicklist(){
+         this.checkListTemp=[];
        },
       resetTemp() {
         this.temp = {
@@ -240,6 +302,7 @@ export default {
       //点击创建单选
     handleCreate() {
       this.dialogType=1;
+      this.resetChicklist();
       this.resetTemp();
       this.dialogStatus = 'create';
       this.dialogFormVisible = true;
@@ -250,9 +313,10 @@ export default {
     //点击创建多选
     handleMultipleCreate(){
       this.dialogType=2;
+      this.resetChicklist();
       this.resetTemp();
       this.dialogStatus = 'create';
-      this.dialogFormVisible = true;
+      this.dialogFormVisible1 = true;
       this.$nextTick(() => {
       this.$refs['dataForm'].clearValidate()
       });
@@ -273,7 +337,10 @@ export default {
       this.dialogType=2;
       this.dialogStatus = 'update';
       this.temp = Object.assign({}, row);
-      this.dialogFormVisible = true;
+      this.checkListTemp = this.checkList[index];
+      console.log(this.checkListTemp);
+      console.log(this.checkList[index]);
+      this.dialogFormVisible1 = true;
       this.inx=index;
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate();
@@ -282,7 +349,7 @@ export default {
     //单选题添加题目
     createData(){
       let idSingle=this.id;
-      console.log(idSingle);
+      // console.log(idSingle);
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           // this.listSingle.push(this.temp);
@@ -296,7 +363,6 @@ export default {
             // console.log(this.listSingle);
 
           });
-            // this.listSingle.push(this.list);
           this.dialogFormVisible = false;
           this.total++;
           this.$notify({
@@ -331,19 +397,24 @@ export default {
     },
     //多选题添加题目
     createMultipleData(){
+      this.temp.answer=this.checkListTemp.join("|");
+      console.log(this.temp.answer);
       let idSingle=this.id;
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           // this.listMultiple.push(this.temp);
+          // this.checkList.push(this.checkListTemp);
           addMultipleParts({
             partsdoubleid:idSingle, title:this.temp.title, 
             choice_a:this.temp.choice_a,choice_b:this.temp.choice_b,
             choice_c:this.temp.choice_c, choice_d:this.temp.choice_d,answer:this.temp.answer
           }).then(response => {
             this.listMultiple.push(response.data[0]);
+            this.checkList.push(response.data[0].answer.split("|"));
+            
           });
             // this.listMultiple.push(this.temp);
-            this.dialogFormVisible = false;
+            this.dialogFormVisible1 = false;
             this.$notify({
               title: '成功',
               message: '添加多选题成功',
@@ -355,11 +426,15 @@ export default {
     },
     //多选题修改题目
     updataMultipleData(){
+      console.log(this.temp.answer);
+      this.temp.answer=this.checkListTemp.join("|");
+      // this.temp.answer=处理过的checklist;
       // console.log(this.listMultiple[this.inx].mc_id);
       let idSingle=this.listMultiple[this.inx].mc_id;
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.listMultiple.splice(this.inx,1,this.temp);
+          this.checkList.splice(this.inx,1,this.checkListTemp);
           changeMultipleParts({
             mc_id:idSingle, title:this.temp.title, 
             choice_a:this.temp.choice_a,choice_b:this.temp.choice_b,
@@ -369,7 +444,7 @@ export default {
             // console.log(this.listSingle);
 
           });
-          this.dialogFormVisible = false;
+          this.dialogFormVisible1 = false;
           this.$notify({
               title: '成功',
               message: '修改多选题成功',
