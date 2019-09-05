@@ -216,7 +216,6 @@ export default {
         for(var n in this.listMultiple){
           // console.log(this.listMultiple[n].answer);
           this.checkList[n]=this.listMultiple[n].answer.split("|")
-
           }
         // console.log(this.listMultiple[0].answer);
         // console.log(listMultiple);
@@ -302,7 +301,6 @@ export default {
       //点击创建单选
     handleCreate() {
       this.dialogType=1;
-      this.resetChicklist();
       this.resetTemp();
       this.dialogStatus = 'create';
       this.dialogFormVisible = true;
@@ -411,7 +409,6 @@ export default {
           }).then(response => {
             this.listMultiple.push(response.data[0]);
             this.checkList.push(response.data[0].answer.split("|"));
-            
           });
             // this.listMultiple.push(this.temp);
             this.dialogFormVisible1 = false;
