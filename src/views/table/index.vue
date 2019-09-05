@@ -164,7 +164,7 @@ export default {
       dialogFormVisible1:false,
       checkList:[],
       // checkListtemp:{},
-       checkListTemp:[],
+      checkListTemp:[],
       //单选题数据
       listSingle:[],
       //多选题数据
@@ -181,7 +181,6 @@ export default {
           answer_desc:null,
           exer_id:null,
           kindID:undefined//分类序号 删除插入操作用此序号
-        
         },
       dialogStatus: '',
       textMap: {
